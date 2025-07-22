@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/payloadtrasformation" name="PayloadTrasformation" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/">
+        <inSequence>
+            
+            <log level="custom">
+                <property name="message" value="Payload Transformation API invoked"/>
+                <property name="payload" expression="get-property('message')"/>
+            </log>
+
+            <property name="message" expression="json-eval('$.message')"/>
+
+            <payloadFactory media-type="xml">
+                <format>
+                    <response>
+                        <message>Payload transformation completed successfully</message>
+                        <status>$1</status>
+                    </response>
+                </format>
+                <args>
+                    <arg expression="get-property('message')"/>
+                </args>
+            </payloadFactory>
+
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
